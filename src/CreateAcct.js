@@ -1,11 +1,20 @@
 import React, { Component } from "react";
 
-class CreateAcct extends Component {
-	state = {
+/*
+	The create account screen component, does all the stuff with the api,
+	don't need much explanation
+*/
+class CreateAcct extends Component
+{
+	state = 
+	{
 
 	}
-	render() {
+	render()
+	{
+		return (
 
+		);
 	}
 }
 
