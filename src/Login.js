@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import Axios from "axios";
+import ErrHandlr from "./FetchErrHandlr";
 
 /*
 	login screen pretty self explanatory
@@ -13,26 +13,54 @@ class Login extends Component
 		isIncorrect: false
 	}
 
-	handleLogin = (event) => 
+	//sends a request to the login endpoint of the API, and then handles the result
+	handleLogin = (e) => 
 	{
-		event.preventDefault(); //this is done to avoid page redirection
-		var url = 'https://wdmegil.wd.its.iastate.edu/PHPsampleAPI/api.php?action=1&username=' + this.state.username + '&password=' + this.state.password;
-		Axios.get(url)
-			.then(function(response)
+		e.preventDefault();
+		let url = 'https://wdmegil.wd.its.iastate.edu/zf2-react-api/login';
+		fetch(url, { //mess with this at your sanity's risk
+			method: 'POST',
+			mode: 'cors',
+			body: JSON.stringify({
+				"username": this.state.username,
+				"password": this.state.password
+			})
+		})
+		.then(response => response.json())
+		.then(json => 
 			{
-				let json = response.json();
-				console.log('After getting the login command: ' + json);
-				if(json.success)
+				if(json.success) 
 				{
-					this.props.updateCredentials(this.state.username, this.props.password);
-					this.props.swapState(3);
+					this.props.updateCredentials(this.state.username, this.state.password);
+					this.props.swapState(2);
 				}
 				else
 				{
-					this.setState({username: '', password: '', isIncorrect: true});
+					alert("you entered incorrect credentials");
+					this.setState({username: '', password: '', isInocrrect: true});
 				}
 			})
+		.catch(ErrHandlr);
 	}
+
+	// handleLogin = async (event) =>
+	// {
+	// 	event.preventDefault();
+	// 	let json = await this.handleLoginRequest(); 
+	// 	console.log(json);
+	// 	if(json.success) 
+	// 	{
+	// 		console.log(json);
+	// 		console.lot(this.props);
+	// 		this.props.updateCredentials(this.state.username, this.state.password);
+	// 		this.props.swapState(2);
+	// 	}
+	// 	else
+	// 	{
+	// 		alert("you entered incorrect credentials");
+	// 		this.setState({username: '', password: '', isInocrrect: true});
+	// 	}
+	// }
 
 	updatePassword = (event) =>
 	{
@@ -44,7 +72,7 @@ class Login extends Component
 		this.setState({username: event.target.value});
 	}
 
-	render() 
+	render()
 	{
 		let tag = '';
 		if(this.state.isIncorrect)
@@ -62,6 +90,7 @@ class Login extends Component
 					</label>
 					<input type="submit" value="Submit" />
 				</form>
+				<button onClick={() => this.props.swapState(1)}>Create an account</button>
 			</>
 		);
 	}

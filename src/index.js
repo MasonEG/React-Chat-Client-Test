@@ -1,3 +1,5 @@
+//Main JS file don't play with it
+
 import React from "react";
 import ReactDOM from "react-dom";
 import App from "./App";
